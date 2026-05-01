@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Profile Card – Stage 1b</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #1a1814;
+      --ink-2:      #4a4640;
+      --ink-3:      #8c8680;
+      --paper:      #f7f4ef;
+      --paper-2:    #ede9e2;
+      --paper-3:    #e2ddd5;
+      --rule:       #d4cfc7;
+      --accent:     #c0392b;
+      --accent-warm:#e8662a;
+      --gold:       #b8922a;
+      --font-serif: 'Playfair Display', Georgia, serif;
+      --font-sans:  'Instrument Sans', sans-serif;
+      --r:          4px;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background: var(--paper-2);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 16px 56px;
+      color: var(--ink);
+
+      /* Subtle paper texture via repeating lines */
+      background-image:
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 27px,
+          rgba(0,0,0,.03) 28px
+        );
+    }
+
+    /* ── MASTHEAD ─────────────────────────────── */
+    .masthead {
+      font-family: var(--font-serif);
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .masthead::before,
+    .masthead::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+      max-width: 60px;
+    }
+
+    /* ════════════════════════════════════════════
+       CARD
+    ════════════════════════════════════════════ */
+    article[data-testid="test-profile-card"] {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      border-radius: var(--r);
+      width: 100%;
+      max-width: 680px;
+      box-shadow:
+        0 1px 2px rgba(0,0,0,.06),
+        0 8px 32px rgba(0,0,0,.08),
+        0 24px 64px rgba(0,0,0,.06);
+      overflow: hidden;
+      animation: fadeUp .6s ease both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── TOP STRIPE ──────────────────────────── */
+    .card-stripe {
+      height: 5px;
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent-warm) 50%, var(--gold) 100%);
+    }
+
+    /* ── MAIN LAYOUT ─────────────────────────── */
+    .card-body {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0;
+    }
+
+    /* ── LEFT COLUMN ─────────────────────────── */
+    .card-aside {
+      padding: 28px 24px 28px 28px;
+      border-right: 1px solid var(--rule);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      background: var(--paper);
+    }
+
+    /* Avatar */
+    figure {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    .avatar-frame {
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      padding: 3px;
+      background: linear-gradient(135deg, var(--accent), var(--gold));
+      flex-shrink: 0;
+    }
+
+    img[data-testid="test-user-avatar"] {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      border: 3px solid var(--paper);
+    }
+
+    figcaption {
+      font-family: var(--font-sans);
+      font-size: .6rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-top: 8px;
+      text-align: center;
+    }
+
+    /* Time block */
+    .time-block {
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+      border-radius: var(--r);
+      padding: 10px 12px;
+    }
+
+    .time-label {
+      font-family: var(--font-sans);
+      font-size: .58rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 4px;
+    }
+
+    [data-testid="test-user-time"] {
+      font-family: 'Playfair Display', serif;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--ink);
+      letter-spacing: .02em;
+      word-break: break-all;
+      line-height: 1.4;
+    }
+
+    /* Social links */
+    nav[data-testid="test-user-social-links"] { width: 100%; }
+
+    .social-heading {
+      font-family: var(--font-sans);
+      font-size: .58rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 8px;
+    }
+
+    nav[data-testid="test-user-social-links"] ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    nav[data-testid="test-user-social-links"] a {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: var(--font-sans);
+      font-size: .73rem;
+      font-weight: 500;
+      color: var(--ink-2);
+      text-decoration: none;
+      padding: 5px 8px;
+      border-radius: var(--r);
+      transition: background .18s, color .18s;
+    }
+
+    nav[data-testid="test-user-social-links"] a:hover {
+      background: var(--paper-2);
+      color: var(--accent);
+    }
+
+    nav[data-testid="test-user-social-links"] a:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    .social-icon {
+      width: 15px; height: 15px;
+      flex-shrink: 0;
+      color: var(--ink-3);
+      transition: color .18s;
+    }
+
+    nav[data-testid="test-user-social-links"] a:hover .social-icon { color: var(--accent); }
+
+    /* ── RIGHT COLUMN ────────────────────────── */
+    .card-main {
+      padding: 28px 28px 28px 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    /* Name + bio */
+    header.card-header { border-bottom: 1px solid var(--rule); padding-bottom: 18px; }
+
+    h2[data-testid="test-user-name"] {
+      font-family: var(--font-serif);
+      font-size: 1.8rem;
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--ink);
+      letter-spacing: -.01em;
+      margin-bottom: 4px;
+    }
+
+    .name-role {
+      font-family: var(--font-sans);
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+
+    p[data-testid="test-user-bio"] {
+      font-family: var(--font-sans);
+      font-size: .88rem;
+      line-height: 1.75;
+      color: var(--ink-2);
+    }
+
+    /* Section title */
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: .72rem;
+      font-weight: 700;
+      font-style: italic;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--ink-3);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--rule);
+    }
+
+    /* Hobbies */
+    section[data-testid="test-user-hobbies"] ul,
+    section[data-testid="test-user-dislikes"] ul {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    section[data-testid="test-user-hobbies"] li,
+    section[data-testid="test-user-dislikes"] li {
+      font-family: var(--font-sans);
+      font-size: .73rem;
+      font-weight: 500;
+      padding: 4px 12px;
+      border-radius: 2px;
+    }
+
+    section[data-testid="test-user-hobbies"] li {
+      background: var(--paper-2);
+      border: 1px solid var(--rule);
+      color: var(--ink-2);
+    }
+
+    section[data-testid="test-user-hobbies"] li::before {
+      content: '✦ ';
+      color: var(--gold);
+      font-size: .6rem;
+    }
+
+    section[data-testid="test-user-dislikes"] li {
+      background: rgba(192,57,43,.06);
+      border: 1px solid rgba(192,57,43,.15);
+      color: var(--ink-2);
+    }
+
+    section[data-testid="test-user-dislikes"] li::before {
+      content: '✕ ';
+      color: var(--accent);
+      font-size: .65rem;
+      font-weight: 700;
+    }
+
+    /* ── CARD FOOTER ─────────────────────────── */
+    .card-footer {
+      padding: 12px 28px;
+      background: var(--paper-2);
+      border-top: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .footer-note {
+      font-family: var(--font-sans);
+      font-size: .62rem;
+      color: var(--ink-3);
+      letter-spacing: .06em;
+    }
+
+    .footer-badge {
+      font-family: var(--font-serif);
+      font-size: .62rem;
+      font-style: italic;
+      color: var(--gold);
+      letter-spacing: .06em;
+    }
+
+    /* ════════════════════════════════════════════
+       RESPONSIVE
+    ════════════════════════════════════════════ */
+    @media (max-width: 560px) {
+      .card-body {
+        grid-template-columns: 1fr;
+      }
+
+      .card-aside {
+        border-right: none;
+        border-bottom: 1px solid var(--rule);
+        padding: 24px 24px 20px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      figure {
+        align-items: flex-start;
+        flex-direction: row;
+        gap: 14px;
+      }
+
+      .avatar-frame { width: 72px; height: 72px; }
+
+      figcaption { text-align: left; margin-top: 0; align-self: center; }
+
+      nav[data-testid="test-user-social-links"] {
+        flex: 1;
+        min-width: 140px;
+      }
+
+      nav[data-testid="test-user-social-links"] ul {
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 4px;
+      }
+
+      .time-block { width: 100%; }
+
+      .card-main { padding: 20px 20px 20px; }
+
+      h2[data-testid="test-user-name"] { font-size: 1.45rem; }
+    }
+
+    @media (min-width: 561px) and (max-width: 700px) {
+      .card-body { grid-template-columns: 170px 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      article[data-testid="test-profile-card"] { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <p class="masthead" aria-label="Stage 1b — Profile Card component">Stage 1b · Profile Card</p>
+
+  <article
+    data-testid="test-profile-card"
+    aria-label="User profile card for Alex Okonkwo"
+  >
+
+    <!-- Top accent stripe -->
+    <div class="card-stripe" aria-hidden="true"></div>
+
+    <!-- Main two-column layout -->
+    <div class="card-body">
+
+ <!-- ══ LEFT ASIDE ══════════════════════════ -->
+      <aside class="card-aside">
+
+        <!-- Avatar -->
+        <figure>
+          <div class="avatar-frame">
+            <img
+              data-testid="test-user-avatar"
+              src="https://api.dicebear.com/9.x/personas/svg?seed=Alex&backgroundColor=b6e3f4"
+              alt="Avatar illustration for Alex Okonkwo — a friendly cartoon portrait with warm tones"
+              width="120"
+              height="120"
+            />
+          </div>
+          <figcaption>@alexokonkwo</figcaption>
+        </figure>
+
+        <!-- Epoch time -->
+        <div class="time-block" aria-label="Current epoch time in milliseconds">
+          <p class="time-label">Epoch time (ms)</p>
+          <output
+            data-testid="test-user-time"
+            id="epoch-time"
+            aria-live="polite"
+            aria-atomic="true"
+            aria-label="Current epoch time in milliseconds"
+          ></output>
+        </div>
+
+        <!-- Social links -->
+        <nav
+          data-testid="test-user-social-links"
+          aria-label="Alex Okonkwo's social media profiles"
+        >
+          <p class="social-heading" aria-hidden="true">Find me on</p>
+          <ul role="list">
+
+            <li>
+              <a
+                data-testid="test-user-social-twitter"
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Twitter profile (opens in new tab)"
+              >
+                <!-- Twitter / X icon -->
+                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                Twitter / X
+              </a>
+            </li>
+
+            <li>
+              <a
+                data-testid="test-user-social-github"
+                href="https://github.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub profile (opens in new tab)"
+              >
+                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0 0 22 12.017C22 6.484 17.522 2 12 2z"/>
+                </svg>
+                GitHub
+              </a>
+            </li>
+
+            <li>
+              <a
+                data-testid="test-user-social-linkedin"
+                href="https://linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn profile (opens in new tab)"
+              >
+                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+                LinkedIn
+              </a>
+            </li>
+
+            <li>
+              <a
+                data-testid="test-user-social-instagram"
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram profile (opens in new tab)"
+              >
+                <svg class="social-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+                </svg>
+                Instagram
+              </a>
+            </li>
+
+          </ul>
+        </nav>
+
+      </aside>
+
+      <!-- ══ RIGHT MAIN ══════════════════════════ -->
+      <div class="card-main">
+
+        <!-- Name + bio -->
+        <header class="card-header">
+          <h2 data-testid="test-user-name" aria-label="Full name: Alex Okonkwo">
+            Alex Okonkwo
+          </h2>
+          <p class="name-role" aria-label="Role: Product Designer &amp; Frontend Developer">
+            Product Designer · Frontend Developer
+          </p>
+          <p data-testid="test-user-bio">
+            I craft thoughtful digital products at the intersection of design and code.
+            Based in Lagos, working with startups across Africa and beyond — helping
+            businesses move from chaotic DMs to clean, scalable web systems. I believe
+            every pixel should earn its place, and every line of code should solve a
+            real problem.
+          </p>
+        </header>
+
+        <!-- Hobbies -->
+        <section
+          data-testid="test-user-hobbies"
+          aria-labelledby="hobbies-heading"
+        >
+          <h3 class="section-title" id="hobbies-heading">Things I love</h3>
+          <ul role="list" aria-label="List of hobbies and interests">
+            <li>UI Design</li>
+            <li>Open Source</li>
+            <li>Photography</li>
+            <li>Chess</li>
+            <li>Afrobeats</li>
+            <li>Reading</li>
+            <li>Coffee</li>
+          </ul>
+        </section>
+
+        <!-- Dislikes -->
+        <section
+          data-testid="test-user-dislikes"
+          aria-labelledby="dislikes-heading"
+        >
+          <h3 class="section-title" id="dislikes-heading">Things I dislike</h3>
+          <ul role="list" aria-label="List of dislikes">
+            <li>Inaccessible UIs</li>
+            <li>Scope creep</li>
+            <li>Poor documentation</li>
+            <li>Dark patterns</li>
+            <li>Meetings without agendas</li>
+          </ul>
+        </section>
+
+      </div>
+
+    </div><!-- /card-body -->
+
+    <!-- Card footer -->
+    <footer class="card-footer">
+      <span class="footer-note">Stage 1b · Profile Card · Frontend Wizards</span>
+      <span class="footer-badge">est. 2026</span>
+    </footer>
+
+  </article>
+
+  <script>
+    (() => {
+      const timeEl = document.getElementById('epoch-time');
+
+      function tick() {
+        timeEl.textContent = Date.now().toString();
+      }
+
+      tick();
+      setInterval(tick, 1000);
+    })();
+  </script>
+
+</body>
+</html>

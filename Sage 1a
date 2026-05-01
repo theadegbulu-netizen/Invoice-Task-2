@@ -1,0 +1,160 @@
+\<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Advanced Todo Card – Stage 1a</title>
+<style>
+body{background:#0b0d12;color:#fff;font-family:sans-serif;display:flex;justify-content:center;padding:40px}
+.card{background:#111318;border:1px solid #222;padding:20px;border-radius:12px;max-width:500px;width:100%;position:relative}
+.done h2{text-decoration:line-through;color:#777}
+button{cursor:pointer}
+.hidden{display:none}
+.badge{padding:4px 8px;border-radius:6px;font-size:12px}
+.high{background:#ff5a5a33;color:#ff5a5a}
+.medium{background:#f5a62333;color:#f5a623}
+.low{background:#3ecf8e33;color:#3ecf8e}
+.overdue{color:#ff5a5a}
+</style>
+</head>
+<body>
+
+<div class="card" id="card" data-testid="test-todo-card">
+
+<!-- VIEW MODE -->
+<div id="view-mode">
+
+<input type="checkbox" id="check" data-testid="test-todo-complete-toggle" />
+
+<h2 id="title" data-testid="test-todo-title">Redesign onboarding flow</h2>
+
+<div data-testid="test-todo-priority-indicator" id="priority-dot">●</div>
+
+<div>
+<select id="status" data-testid="test-todo-status-control">
+<option>Pending</option>
+<option>In Progress</option>
+<option>Done</option>
+</select>
+</div>
+
+<div data-testid="test-todo-collapsible-section" id="descBox">
+<p id="desc" data-testid="test-todo-description">This is a long description of the task that can be expanded or collapsed for better UI experience.</p>
+</div>
+<button data-testid="test-todo-expand-toggle" id="toggle">Expand</button>
+
+<p id="time" aria-live="polite"></p>
+<p id="overdue" data-testid="test-todo-overdue-indicator" class="hidden">Overdue</p>
+
+<button id="editBtn">Edit</button>
+
+</div>
+
+<!-- EDIT MODE -->
+<div id="edit-mode" class="hidden" data-testid="test-todo-edit-form">
+<label>Title</label>
+<input id="edit-title" data-testid="test-todo-edit-title-input" />
+
+<label>Description</label>
+<textarea id="edit-desc" data-testid="test-todo-edit-description-input"></textarea>
+
+<label>Priority</label>
+<select id="edit-priority" data-testid="test-todo-edit-priority-select">
+<option>Low</option>
+<option>Medium</option>
+<option>High</option>
+</select>
+
+<label>Due Date</label>
+<input type="datetime-local" id="edit-date" data-testid="test-todo-edit-due-date-input" />
+
+<button id="save" data-testid="test-todo-save-button">Save</button>
+<button id="cancel" data-testid="test-todo-cancel-button">Cancel</button>
+</div>
+
+</div>
+
+<script>
+let state={
+ title:"Redesign onboarding flow",
+ desc:"This is a long description of the task that can be expanded or collapsed for better UI experience.",
+ priority:"High",
+ status:"Pending",
+ due:new Date(Date.now()+3600000)
+};
+
+const el=id=>document.getElementById(id);
+
+function render(){
+ el("title").textContent=state.title;
+ el("desc").textContent=state.desc;
+ el("status").value=state.status;
+ el("check").checked=state.status==="Done";
+
+ document.getElementById("card").classList.toggle("done",state.status==="Done");
+
+ let p=state.priority.toLowerCase();
+ el("priority-dot").className=p;
+
+updateTime();
+}
+
+function updateTime(){
+ if(state.status==="Done"){
+ el("time").textContent="Completed";
+ return;
+ }
+ let diff=state.due-Date.now();
+ let overdue=diff<0;
+ let mins=Math.floor(Math.abs(diff)/60000);
+ let text=overdue?`Overdue by ${mins} mins`:`Due in ${mins} mins`;
+ el("time").textContent=text;
+ el("overdue").classList.toggle("hidden",!overdue);
+}
+
+setInterval(updateTime,30000);
+
+el("check").onchange=()=>{
+ state.status=el("check").checked?"Done":"Pending";
+ render();
+};
+
+el("status").onchange=()=>{
+ state.status=el("status").value;
+ render();
+};
+
+el("toggle").onclick=()=>{
+ el("descBox").classList.toggle("hidden");
+};
+
+el("editBtn").onclick=()=>{
+ el("view-mode").classList.add("hidden");
+ el("edit-mode").classList.remove("hidden");
+
+ el("edit-title").value=state.title;
+ el("edit-desc").value=state.desc;
+ el("edit-priority").value=state.priority;
+};
+
+el("cancel").onclick=()=>{
+ el("edit-mode").classList.add("hidden");
+ el("view-mode").classList.remove("hidden");
+};
+
+el("save").onclick=()=>{
+ state.title=el("edit-title").value;
+ state.desc=el("edit-desc").value;
+ state.priority=el("edit-priority").value;
+ state.due=new Date(el("edit-date").value||state.due);
+
+ el("edit-mode").classList.add("hidden");
+ el("view-mode").classList.remove("hidden");
+ render();
+};
+
+render();
+</script>
+
+</body>
+</html>
